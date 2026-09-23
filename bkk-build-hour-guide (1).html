@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BKK build hour guide</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --ink:#1b1d22; --muted:#5b6170; --line:#e2ddd3; --panel:#f3f0ea;
+    --accent:#c9633f; --accent-soft:#f6e3d9; --green:#2f8f5b; --blue:#3b63c4; --yellow:#b8860b;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55;font-size:15.5px}
+  .wrap{max-width:1000px;margin:0 auto;padding:40px 28px 80px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:18px;margin-bottom:30px}
+  .eyebrow{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px}
+  h1{font-size:34px;line-height:1.1;letter-spacing:-.01em;font-weight:800}
+  h2{font-size:24px;font-weight:800;margin:0 0 12px;letter-spacing:-.01em}
+  h3{font-size:17px;font-weight:700;margin:18px 0 6px}
+  p{margin:0 0 10px;color:var(--ink);max-width:78ch}
+  p.muted{color:var(--muted)}
+  section{margin:0 0 44px;padding-top:6px}
+  section.page{page-break-before:always;break-before:page}
+  ul,ol{margin:0 0 12px 22px}
+  li{margin:4px 0}
+  li strong{font-weight:700}
+  table{border-collapse:collapse;width:100%;margin:12px 0 16px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel);font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  td.t{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+  td.s{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+  .card .tag{font-family:var(--mono);font-size:12px;color:var(--accent);display:block;margin-bottom:6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  pre{background:#1b1d22;color:#e9e6df;border-radius:10px;padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.5;margin:8px 0 14px;white-space:pre-wrap}
+  .callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .callout p{margin:0}
+  .toc{columns:2;column-gap:30px;font-size:14.5px}
+  .toc li{break-inside:avoid}
+  a{color:var(--blue)}
+  .check li{list-style:none;position:relative;padding-left:26px}
+  .check li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:3px}
+
+  /* worksheet */
+  .ws{border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;margin:12px 0}
+  .ws h2{font-size:20px}
+  .ws .line{border-bottom:1px solid #999;height:30px;margin:6px 0}
+  .ws .row{display:grid;grid-template-columns:44px 1fr 70px 60px;gap:10px;align-items:end;margin:4px 0}
+  .ws .row .hd{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:none;height:auto}
+  .ws .row span{border-bottom:1px solid #999;height:30px;display:block}
+  .ws .row .n{font-family:var(--mono);font-size:13px;border:none;color:var(--accent);height:30px;line-height:30px}
+  .ws .small{font-size:12.5px;color:var(--muted)}
+  .box{border:1px solid #999;border-radius:6px;min-height:70px;margin:6px 0 12px;padding:6px 8px;font-size:12.5px;color:var(--muted)}
+
+  @media print{
+    body{background:#fff;font-size:12.5px}
+    .wrap{max-width:none;padding:0}
+    header{margin-bottom:18px}
+    section{margin-bottom:24px}
+    pre{white-space:pre-wrap;font-size:11px}
+    a{color:inherit;text-decoration:none}
+    .no-print{display:none}
+    @page{margin:16mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Bakhabar Kissan · Claude Code · the build hour</div>
+  <h1>Run the build hour yourself</h1>
+  <p class="muted" style="margin-top:10px">Everything needed to run the hands-on hour again with a new group: the setup, the data rules, the recipe, one starter card per department, the worksheet, and the prompts. Goes with the deck <code>bkk-work-with-claude-code.html</code> and the <code>demo-seeds/</code> folder.</p>
+</header>
+
+<section>
+  <h2>What's in this guide</h2>
+  <ol class="toc">
+    <li>What the hour produces</li>
+    <li>Before the hour: the setup each person needs</li>
+    <li>Data rules</li>
+    <li>The recipe, seven steps</li>
+    <li>The hour, minute by minute</li>
+    <li>Pod cards: starter prompts and demo seeds by department</li>
+    <li>The red-team card</li>
+    <li>Show and tell, commit, the first 20 minutes back at the desk</li>
+    <li>Worksheet</li>
+    <li>Appendix: the setup prompts and CLAUDE.md</li>
+  </ol>
+</section>
+
+<section>
+  <h2>1. What the hour produces</h2>
+  <p>Each person leaves with one real output from a task they actually do, spot-checked against its source, red-teamed once, saved as a template, and a two-line note on where things stand. One facilitator can run it for 20 to 25 people in department pods of 3 to 5. Two is easier.</p>
+  <div class="callout"><p><strong>The question to ask at every table, all hour:</strong> "Where is it saved, and what did you check it against?"</p></div>
+</section>
+
+<section>
+  <h2>2. Before the hour: the setup each person needs</h2>
+  <ul class="check">
+    <li>A folder called <strong>Claude</strong> with three subfolders: <strong>ABOUT ME</strong>, <strong>OUTPUTS</strong>, <strong>TEMPLATES</strong>.</li>
+    <li>A <strong>CLAUDE.md</strong> file at the root of that folder (text in the appendix).</li>
+    <li>Three files in ABOUT ME: <strong>about-me.md</strong>, <strong>anti-ai-writing-style.md</strong>, <strong>my-department.md</strong>. The first and third come from a short interview (prompts in the appendix); the second starts from the template in the appendix and gets the team's Urdu and Punjabi rules added.</li>
+    <li>The Claude desktop app, Code tab, opened on that folder. Opus selected.</li>
+    <li>No desktop app or paid plan: a claude.ai Project instead. ABOUT ME text pasted into the project instructions, input files uploaded, outputs downloaded and filed by hand. Same recipe.</li>
+    <li>One task from their own month written as a task map (worksheet page 1), and one input file for it with personal data removed, or the pod's demo seed.</li>
+  </ul>
+  <p class="muted">If setup hasn't happened before the hour, spend the first 10 minutes on it and shorten the build. A folder that exists beats a perfect about-me.</p>
+</section>
+
+<section>
+  <h2>3. Data rules</h2>
+  <ul>
+    <li><strong>No farmer personal data.</strong> Names, phone numbers, CNICs, land records: replace with IDs before anything goes in.</li>
+    <li><strong>No salaries, bank details, or unreleased financials</strong> unless the manager has cleared the plan in use for that data.</li>
+    <li><strong>Anonymize in 30 seconds:</strong> ask Claude to build a fake sample with the same columns, or find-and-replace names with F001, F002.</li>
+    <li><strong>When unsure, use the demo seeds.</strong> The system built on a seed works the same on real, cleared data next week.</li>
+  </ul>
+  <p>Bakhabar Kissan holds data on 15 million farmers. A training exercise is the wrong place to test the data policy. Ask IT which plan is in use and what it permits before real data goes in.</p>
+</section>
+
+<section class="page">
+  <h2>4. The recipe, seven steps</h2>
+  <ol>
+    <li><strong>Open Claude Code in the folder</strong> (or the Project). Confirm it read CLAUDE.md and ABOUT ME.</li>
+    <li><strong>Paste the task map as the brief.</strong> Inputs, steps, output, who it's for, what "right" means. Speak the extra context; the app's microphone or a dictation tool is faster than typing.</li>
+    <li><strong>Attach one real input,</strong> anonymized, or the pod's demo seed.</li>
+    <li><strong>Ask for the output as .md, .html or .xlsx,</strong> saved in OUTPUTS/[the task]/.</li>
+    <li><strong>Territory check:</strong> open the source next to the output. Spot-check 5 rows or 5 facts. Fix what's wrong. Every seed has planted errors, so there is always something to find.</li>
+    <li><strong>Red-team it once.</strong> Pick one of the four prompts in section 7.</li>
+    <li><strong>Save the shape:</strong> "Save this as a template in TEMPLATES/." Then write the resume note: where things stand, and the next step.</li>
+  </ol>
+  <div class="callout"><p><strong>The 5-minute timer.</strong> Set it at step 2. If someone is still staring at a blank box when it rings, they set another and write their next 5 steps instead of the brief. Three outcomes, all fine: it's done, it wasn't worth doing, or it's bigger than it looked.</p></div>
+</section>
+
+<section>
+  <h2>5. The hour, minute by minute</h2>
+  <table>
+    <tr><th>Time</th><th>What happens</th><th>Facilitator</th></tr>
+    <tr><td class="t">0:00</td><td>Setup check: folder or Project open, ABOUT ME read, task map on the desk. Data rules read aloud.</td><td>Point anyone with sensitive files to the seeds.</td></tr>
+    <tr><td class="t">0:05</td><td>Each person says their task to the pod in one sentence. Cut anything too big.</td><td>One deliverable, one recipient. "What's the file, and who opens it?"</td></tr>
+    <tr><td class="t">0:10</td><td>Build. Steps 1 to 5 of the recipe. Recipe on screen the whole time.</td><td>Circulate pod to pod. First 10 minutes with the most stuck pod, usually GIS or Finance. Hand typists the microphone. Pick 3 volunteers by 0:30.</td></tr>
+    <tr><td class="t">0:40</td><td>Show and tell: 3 volunteers, one output each, 3 minutes each. Red-team one live.</td><td>Section 8.</td></tr>
+    <tr><td class="t">0:52</td><td>Save the template, write the resume note, write one habit in the "when… I…" form.</td><td>Nobody closes a laptop with unsaved work.</td></tr>
+    <tr><td class="t">0:57</td><td>Commit, out loud, one sentence each.</td><td>Fifteen seconds a person.</td></tr>
+  </table>
+  <h3>What "stuck" looks like</h3>
+  <ul>
+    <li><strong>Blank box after 3 minutes:</strong> speak the brief instead of typing it, or paste the task map line by line.</li>
+    <li><strong>"Run payroll," "content":</strong> too big. This month's version of one file for one person.</li>
+    <li><strong>Output looks right, source never opened:</strong> open them side by side and use the planted checks in the demo-seeds README.</li>
+    <li><strong>Message 20 of an argument with Claude:</strong> ask for a summary, start fresh, paste the summary as message one.</li>
+    <li><strong>A chat answer and no file:</strong> "Save that as .md in OUTPUTS/[task]/." Then check the folder and its INDEX.md row.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <h2>6. Pod cards: starter prompts and demo seeds</h2>
+  <p class="muted">Print one per table. Every card assumes the folder or Project is set up and ABOUT ME exists. Seed files live in <code>demo-seeds/</code>; the README there lists the planted errors. All names and numbers in the seeds are invented.</p>
+<div class="grid2">
+    <div class="card"><span class="tag">people &amp; culture · seed: attendance-export.csv</span>
+      <p><strong>Task:</strong> monthly attendance and leave summary.</p>
+      <pre>Read ABOUT ME. Here is this month's attendance export. Produce the monthly summary in this format: headline numbers, then a table by department, then a list of anyone with more than 3 unplanned absences. Flag every row you weren't sure how to classify instead of guessing. Save as .md in OUTPUTS/attendance/.</pre>
+      <p><strong>Territory check:</strong> pick 5 employee IDs, count their absences by hand in the CSV.</p></div>
+
+    <div class="card"><span class="tag">finance · seeds: bank.csv, ledger.csv</span>
+      <p><strong>Task:</strong> reconcile two exports.</p>
+      <pre>Read ABOUT ME. Reconcile bank.csv against ledger.csv by reference, date and amount, allowing a 1-day date tolerance. Give me an .xlsx with three tabs (matched, bank only, ledger only) and a 5-line note listing each mismatch and what I should check. Don't guess at causes the data doesn't show. Save in OUTPUTS/reconcile/.</pre>
+      <p><strong>Territory check:</strong> there are exactly 3 planted mismatches. Did it find all 3 and nothing else?</p></div>
+
+    <div class="card"><span class="tag">gis · seed: field-survey.csv</span>
+      <p><strong>Task:</strong> clean a field survey export.</p>
+      <pre>Read ABOUT ME. Here is a field survey CSV. Clean it: standardize coordinates to decimal degrees, dedupe on farm_id keeping the latest visit, flag rows with coordinates outside Punjab, and normalize crop names. Give me the cleaned CSV, the Python you used so I can rerun it next month, and a one-page brief of what changed. Save in OUTPUTS/survey-clean/.</pre>
+      <p><strong>Territory check:</strong> 2 duplicates, 1 out-of-bounds point, 3 crop spelling variants were planted.</p></div>
+
+    <div class="card"><span class="tag">e-commerce · seed: product-specs.csv</span>
+      <p><strong>Task:</strong> listings and reply templates.</p>
+      <pre>Read ABOUT ME. Here are 8 product spec rows. Write an Urdu and an English listing for each in our house format (title, 2-line benefit, specs, how to use). Use only the specs given. Then write 3 WhatsApp reply templates for the top customer questions: price and delivery, how to apply, is it in stock. Save in OUTPUTS/listings/.</pre>
+      <p><strong>Territory check:</strong> compare pack size and price on 3 listings against the CSV.</p></div>
+
+    <div class="card"><span class="tag">agri content · seed: agronomist-notes-wheat-sowing.md</span>
+      <p><strong>Task:</strong> advisory in three formats.</p>
+      <pre>Read ABOUT ME. Here are agronomist notes on wheat sowing for Punjab. Turn them into a WhatsApp advisory in simple Urdu (aap register, short lines, every number exactly as in the notes), an English app version, and a 30-second video script. Don't add any number or recommendation that isn't in the notes. Save the three files in OUTPUTS/advisory/ and tell me which lines you were least sure about.</pre>
+      <p><strong>Territory check:</strong> seed rate, sowing window, first irrigation timing: identical in all three?</p></div>
+
+    <div class="card"><span class="tag">studio · seed: studio-brief.md</span>
+      <p><strong>Task:</strong> brief to production pack.</p>
+      <pre>Read ABOUT ME. Here is the brief for a 90-second farmer testimonial video. Give me a shot list with locations and durations, a 2-day shoot schedule, a script draft in our format with Urdu dialogue and English direction notes, and captions for YouTube, Facebook and TikTok from one master. Save in OUTPUTS/testimonial-video/.</pre>
+      <p><strong>Territory check:</strong> does the shot list cover every beat in the brief? Anything invented?</p></div>
+
+    <div class="card"><span class="tag">field &amp; conventional · seed: voice-note-transcript.md</span>
+      <p><strong>Task:</strong> visit report from a voice note.</p>
+      <pre>Read ABOUT ME. Here is the transcript of my voice notes from today's 3 farm visits. Turn it into the visit report format (one section per farm: observed, advised, follow-up, owner, date). Pull every follow-up into a single table at the end. Draft the WhatsApp message to each farmer in simple Urdu confirming what we agreed. Save in OUTPUTS/visits/.</pre>
+      <p><strong>Territory check:</strong> 4 follow-ups are in the transcript. Are all 4 in the table, with the right farm?</p></div>
+
+    <div class="card"><span class="tag">any department · no seed needed</span>
+      <p><strong>Task:</strong> document the process only you know.</p>
+      <pre>Read ABOUT ME. There's a process at work only I know how to do: [name it]. Interview me about it with AskUserQuestion, 8 questions, one at a time, asking for specifics when I'm vague. Then write the SOP: purpose, inputs, numbered steps, common mistakes, how to check it's done right. Save as reference/[name]-sop.md and add a one-line summary to about-me.md.</pre>
+      <p><strong>Territory check:</strong> hand the SOP to a pod-mate. Can they follow step 3 without asking you?</p></div>
+  </div>
+
+</section>
+
+<section class="page">
+  <h2>7. The red-team card</h2>
+  <p>Paste one of these after any draft, plan or analysis that matters. Ask "why is this bad?", never "is this good?"; a model is trained to agree with you.</p>
+  <pre>1. Disagreement
+"Assume this [draft/plan] is a mistake. Give me the 3 strongest reasons a smart, experienced person in my role would not do it."
+
+2. Base rates
+"Out of 100 similar attempts at this, how many got the result I want? Name the reference class you're using."
+
+3. Pre-mortem
+"It is 3 months later and this failed. Write the post-mortem: what went wrong, in which week, and why."
+
+4. Fermi
+"Break this into pieces. Estimate each piece as a range, multiply them, and tell me the number I should expect."</pre>
+  <div class="callout"><p><strong>Then the person writes the last line.</strong> "I'd ship this as is / with these fixes / not yet, because…" In their words, every time.</p></div>
+</section>
+
+<section>
+  <h2>8. Show and tell, commit, the first 20 minutes</h2>
+  <h3>Show and tell (12 minutes)</h3>
+  <ol>
+    <li>Volunteer shows the output and the input side by side. What did Claude get right? What did the territory check catch?</li>
+    <li>The room picks one red-team prompt. Run it on screen and read the three objections aloud. Ask which one is real.</li>
+    <li>The volunteer writes the final sentence: "I'd ship this as is / with these fixes / not yet, because…"</li>
+  </ol>
+  <h3>Commit (3 minutes, out loud)</h3>
+  <ol>
+    <li>One habit, in the "when… I…" form, on the worksheet. For example: "When Claude gives me a number, I ask where it came from."</li>
+    <li>One task moved into Claude this week, with a day and time on the calendar.</li>
+    <li>One template saved, or the about-me interview finished, whichever didn't happen yet.</li>
+  </ol>
+  <h3>The first 20 minutes back at the desk</h3>
+  <ol>
+    <li><strong>0-5:</strong> folder and three subfolders exist, CLAUDE.md saved.</li>
+    <li><strong>5-12:</strong> finish the about-me and my-department interviews. Speak the answers.</li>
+    <li><strong>12-14:</strong> edit the anti-ai file. Add the Urdu and Punjabi rules the team actually uses.</li>
+    <li><strong>14-16:</strong> add one reference file for the most repeated task.</li>
+    <li><strong>16-20:</strong> run today's task again on this week's real, cleared data. Watch where the output lands and check the INDEX.md row.</li>
+  </ol>
+  <p class="muted">Do it with a pod-mate. Two people with the same setup catch each other's gaps.</p>
+</section>
+
+<section class="page">
+  <div class="ws">
+    <div class="eyebrow">Worksheet · page 1 · before you build</div>
+    <h2>The task map: one repetitive task as a system</h2>
+    <p class="small">Pick the task that eats the most hours per month. One deliverable, one recipient. Mark each step H (human), C (Claude) or H+C. Guess how often each step works today.</p>
+
+    <h3>Name and department</h3><div class="line"></div>
+    <h3>The task, in one sentence</h3><div class="line"></div>
+    <h3>Hours per month it takes today</h3><div class="line" style="width:200px"></div>
+
+    <h3>Inputs, and where each comes from</h3>
+    <div class="line"></div><div class="line"></div><div class="line"></div>
+
+    <h3>Steps, in order</h3>
+    <div class="row"><span class="hd">#</span><span class="hd">step</span><span class="hd">H / C / H+C</span><span class="hd">works %</span></div>
+    <div class="row"><span class="n">1</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">2</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">3</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">4</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">5</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">6</span><span></span><span></span><span></span></div>
+    <div class="row"><span class="n">7</span><span></span><span></span><span></span></div>
+
+    <h3>Output, and who uses it</h3><div class="line"></div>
+    <h3>How I know it's right (one sentence)</h3><div class="line"></div>
+    
+  </div>
+</section>
+
+<section class="page">
+  <div class="ws">
+    <div class="eyebrow">Worksheet · page 2 · the build hour</div>
+    <h2>Check, decide, commit</h2>
+
+    <h3>Offload check</h3>
+    <p class="small">Can I verify Claude's output in less time than doing the task myself? How, exactly? (spot-check 5 rows, compare 3 numbers to the source, read it aloud to a colleague…)</p>
+    <div class="box"></div>
+
+    <h3>Build hour result</h3>
+    <p class="small">Output file saved at:</p><div class="line"></div>
+    <p class="small">Territory check found:</p><div class="line"></div>
+    <p class="small">Red-team objection I'll fix:</p><div class="line"></div>
+    <p class="small">My final sentence: "I'd ship this ____________ because ____________________________________________."</p>
+
+    <h3>My habit</h3>
+    <p class="small">When ______________________________________________, I ______________________________________________.</p>
+    <div class="line"></div>
+
+    <h3>Commit</h3>
+    <p class="small">The task I move into Claude this week, and the day and time on my calendar:</p>
+    <div class="line"></div>
+    <p class="small">Resume note (where things stand, and my next step):</p>
+    <div class="box"></div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>10. Appendix: the setup prompts and CLAUDE.md</h2>
+
+  <h3>CLAUDE.md, at the root of the Claude folder</h3>
+  <pre>This is my Claude folder. You work inside it.
+
+Before any and every task, read these core files in ABOUT ME/:
+- about-me: who I am, what I love and hate (plus an index of my reference files)
+- anti-ai-writing-style: write, then audit your draft against this file
+- my-department: my team's goals and what we're working toward
+
+ABOUT ME/reference/ holds detailed files for repeat tasks. Read one only
+when the task matches its summary in about-me. Don't load the rest.
+
+Never read OUTPUTS/ or TEMPLATES/ unless I point you there. When I do, read that folder's INDEX.md first, then open only what the task needs.
+
+Save all deliverables in OUTPUTS/ in a subfolder named after the project. After saving, add or update the file's row in that folder's INDEX.md (file, created, updated, one line on what it is) and set its Last updated date. Create the index if the folder doesn't have one.
+
+Never invent a number, a name, or a source. If the input doesn't contain it, say so and ask.
+
+If the brief is unclear, use AskUserQuestion. Don't fill gaps with filler. Don't over-explain. Deliver the work.</pre>
+
+  <h3>about-me.md: paste into a new Claude Code session, on Opus, and answer out loud</h3>
+  <pre>You are building my about-me.md file for my Claude folder. This file will be read by Claude at the start of every session to help you do my job with me. It needs to be concise and high-signal.
+
+Your job: interview me using AskUserQuestion (20 questions), then compile the answers into a condensed about-me.md under 2,000 tokens.
+
+Interview rules: one question at a time. Let me use "Other" to dictate long answers. If I'm vague, push back and ask for a specific example. Follow interesting threads before moving on.
+
+Cover: who I am (role, department at Bakhabar Kissan, who I work with, a good week), how I work (daily tools, how I start a task, how I review, what "done" means), what good looks like, what I hate, my hard rules, the languages I work in and when each one is used, and my contrarian opinions.
+
+Output: a single markdown file. Do NOT save raw Q&A. Extract patterns into condensed prose and bullets. End with a section "Instructions for Claude" holding 10 numbered do/don't rules. Under 2,000 tokens. Save as about-me.md in my ABOUT ME/ folder.</pre>
+
+  <h3>my-department.md: paste after about-me is done, same session</h3>
+  <pre>You are building my my-department.md file for my Claude folder. This tells Claude what my team at Bakhabar Kissan is working toward right now so it makes better calls on every task. My about-me.md already covers who I am, so no overlap. Goals and decisions only.
+
+Interview me using AskUserQuestion (6-8 questions), one at a time, then compile a condensed my-department.md under 1,000 tokens.
+
+Cover: my department's top 2-3 goals this year with specific numbers, the crop seasons or business cycles that shape my calendar (Rabi, Kharif, month-end, campaign launches), who reads my work and how they like to receive it, the one metric that means success, and what we're actively saying no to.
+
+Output structure:
+# MY DEPARTMENT
+## Goals   (bullets, numbers where possible)
+## Calendar and cycles   (2-4 bullets)
+## Who reads my work   (name, role, format they want)
+## Saying no to   (bullets)
+
+Under 1,000 tokens. Save as my-department.md in my ABOUT ME/ folder.</pre>
+
+  <h3>anti-ai-writing-style.md: starter, edit the banned list and the language rules</h3>
+  <pre># MY WRITING RULES
+
+## Voice
+- Short paragraphs. 1-2 sentences, 3 max.
+- Vary sentence length. No metronome rhythm.
+- Contractions always. Use "I" and "you." Active voice.
+- Be specific: numbers, names, real examples.
+- Take a stance. If you've made the point, stop.
+
+## Languages
+- Farmer-facing: simple Urdu, "aap" register, short sentences,
+  crop and input names as farmers say them (keep Punjabi terms).
+- Internal: English, US spelling.
+- Never mix scripts in one message unless I ask.
+
+## Formatting
+- Numbers as digits. NO em dashes.
+- Bold sparingly. Sentence case headers.
+
+## Banned words (English)
+delve, leverage, harness, unlock, seamless, robust,
+streamline, elevate, supercharge, game-changer, crucial,
+pivotal, tapestry, realm, showcase, foster, empower,
+cutting-edge, revolutionize, dive in, in today's world
+
+## Banned patterns (fatal)
+- "This isn't X, it's Y." / "Not X. Y."
+- "It's not about X, it's about Y."
+- Any sentence that negates a framing then corrects it.
+Fix: delete everything before the positive claim.
+
+## Also avoid
+- Rule of three ("fast, clean, and simple")
+- "It's worth noting" / "let's dive in" / "moving forward"
+- "I'd be happy to" / "great question"</pre>
+
+  <h3>Turn a solved problem into a skill</h3>
+  <p class="muted">Paste at the end of a chat where the steps worked. The skill runs the same way next time.</p>
+  <pre>Read this whole conversation where we worked out [problem]. Pull the repeatable workflow out of it and build a skill: a SKILL.md with a short description of when to use it, the trigger phrases, and the exact steps in order. Keep it generic so it works next time too, not just for this one case. Save it in .claude/skills/ so I can reuse it.</pre>
+
+  <h3>What an INDEX.md looks like</h3>
+  <p class="muted">Every folder in OUTPUTS gets one. CLAUDE.md tells Claude to read it before opening a folder and to update it after saving.</p>
+  <pre># INDEX: advisory-demo
+
+Advisories built from agronomist notes, two formats each.
+
+_Last updated: 2026-10-02_
+
+## Files
+
+| File | Created | Updated | What it is |
+|---|---|---|---|
+| whitefly-whatsapp-ur.md | 2026-10-02 | 2026-10-02 | Urdu WhatsApp advisory, dosage checked against the notes |
+| whitefly-script.md | 2026-10-02 | 2026-10-02 | 30-second Studio script, approved by the agronomist |
+
+## Subfolders
+
+| Folder | Files | What's in it |
+|---|---|---|
+| raw-notes/ | 14 | Bulk. Voice-note transcripts, machine-generated |</pre>
+</section>
+
+</div>
+</body>
+</html>
